@@ -868,7 +868,7 @@ impl TryFrom<u32> for SetState {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WmState {
     Withdrawn = 0,
     Normal = 1,
@@ -1005,13 +1005,13 @@ impl XConnection for RealConnection {
         }) {
             debug!("ChangeProperty failed ({:?}: {:?})", window, e);
         }
-        if let Err(e) = self.connection.send_and_check_request(&x::ChangeProperty {
+        if let Err(e) = dbg!(self.connection.send_and_check_request(&x::ChangeProperty {
             mode: x::PropMode::Replace,
             window,
             property: self.atoms.wm_state,
             r#type: self.atoms.wm_state,
             data: &[WmState::Normal as u32, 0],
-        }) {
+        })) {
             debug!("ChangeProperty failed ({:?}: {:?})", window, e);
         }
 
